@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
+import { useAppTheme } from '../../../theme/useAppTheme';
+
 export default function TaskListCard({
   title,
   description,
@@ -9,6 +11,10 @@ export default function TaskListCard({
   onDelete,
   onEdit,
 }) {
+  const theme = useAppTheme();
+
+  const styles = createStyles(theme);
+
   return (
     <View style={styles.card}>
       {/* Header */}
@@ -48,98 +54,104 @@ export default function TaskListCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 18,
-    marginBottom: 16,
-    elevation: 3,
-  },
+const createStyles = theme =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: theme.card,
+      borderRadius: 16,
+      padding: 18,
+      marginBottom: 16,
+      elevation: 3,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
 
-  topSection: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
+    topSection: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
 
-  checkboxContainer: {
-    marginRight: 14,
-    marginTop: 2,
-  },
+    checkboxContainer: {
+      marginRight: 14,
+      marginTop: 2,
+    },
 
-  checkbox: {
-    width: 26,
-    height: 26,
-    borderWidth: 2,
-    borderColor: '#000',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    checkbox: {
+      width: 26,
+      height: 26,
+      borderWidth: 2,
+      borderColor: theme.text,
+      borderRadius: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
 
-  checkboxChecked: {
-    backgroundColor: '#000',
-  },
+    checkboxChecked: {
+      backgroundColor: theme.btnBackground,
+      borderColor: theme.btnBackground,
+    },
 
-  checkmark: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
+    checkmark: {
+      color: theme.btnText,
+      fontSize: 16,
+      fontWeight: '700',
+    },
 
-  contentContainer: {
-    flex: 1,
-  },
+    contentContainer: {
+      flex: 1,
+    },
 
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#111',
-  },
+    title: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: theme.text,
+    },
 
-  description: {
-    marginTop: 6,
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-  },
+    description: {
+      marginTop: 6,
+      fontSize: 14,
+      color: theme.secondaryText,
+      lineHeight: 20,
+    },
 
-  completedText: {
-    textDecorationLine: 'line-through',
-    opacity: 0.5,
-  },
+    completedText: {
+      textDecorationLine: 'line-through',
+      opacity: 0.5,
+    },
 
-  actionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 18,
-  },
+    actionContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginTop: 18,
+    },
 
-  editButton: {
-    backgroundColor: '#000',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginRight: 10,
-  },
+    editButton: {
+      backgroundColor: theme.btnBackground,
 
-  editText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 14,
-  },
+      paddingHorizontal: 18,
+      paddingVertical: 10,
+      borderRadius: 10,
+      marginRight: 10,
+    },
 
-  deleteButton: {
-    borderWidth: 1,
-    borderColor: '#ff3b30',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
+    editText: {
+      color: theme.btnText,
+      fontWeight: '600',
+      fontSize: 14,
+    },
 
-  deleteText: {
-    color: '#ff3b30',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-});
+    deleteButton: {
+      borderWidth: 1,
+      borderColor: '#ff3b30',
+      paddingHorizontal: 18,
+      paddingVertical: 10,
+      borderRadius: 10,
+      backgroundColor: theme.card,
+    },
+
+    deleteText: {
+      color: '#ff3b30',
+      fontWeight: '600',
+      fontSize: 14,
+    },
+  });

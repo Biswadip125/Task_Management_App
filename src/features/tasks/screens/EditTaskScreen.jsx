@@ -6,15 +6,25 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import useTasks from '../hooks/useTask';
 
+import { useAppTheme } from '../../../theme/useAppTheme';
+
 export default function EditTaskScreen({ navigation, route }) {
   const { task } = route.params;
+
   const { updateTask } = useTasks();
+
   const [title, setTitle] = useState(task?.title);
+
   const [description, setDescription] = useState(task?.description);
+
+  const theme = useAppTheme();
+
+  const styles = createStyles(theme);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,6 +38,7 @@ export default function EditTaskScreen({ navigation, route }) {
           value={title}
           onChangeText={setTitle}
           style={styles.input}
+          placeholderTextColor={theme.secondaryText}
         />
 
         <Text style={styles.label}>Task Description</Text>
@@ -38,6 +49,7 @@ export default function EditTaskScreen({ navigation, route }) {
           onChangeText={setDescription}
           style={[styles.input, styles.descriptionInput]}
           multiline
+          placeholderTextColor={theme.secondaryText}
         />
 
         <TouchableOpacity
@@ -51,62 +63,69 @@ export default function EditTaskScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-    paddingHorizontal: 20,
-  },
+const createStyles = theme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
 
-  heading: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#000',
-    marginTop: 20,
-    marginBottom: 30,
-  },
+      paddingHorizontal: 20,
+    },
 
-  formContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    elevation: 3,
-  },
+    heading: {
+      fontSize: 28,
+      fontWeight: '700',
+      color: theme.text,
+      marginTop: 20,
+      marginBottom: 30,
+    },
 
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#222',
-    marginBottom: 10,
-  },
+    formContainer: {
+      backgroundColor: theme.card,
+      borderRadius: 16,
+      padding: 20,
+      elevation: 3,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
 
-  input: {
-    borderWidth: 1,
-    borderColor: '#DDD',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    backgroundColor: '#FAFAFA',
-    marginBottom: 20,
-  },
+    label: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: theme.text,
+      marginBottom: 10,
+    },
 
-  descriptionInput: {
-    height: 120,
-    textAlignVertical: 'top',
-  },
+    input: {
+      borderWidth: 1,
+      borderColor: theme.border,
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      fontSize: 16,
+      backgroundColor: theme.background,
 
-  updateButton: {
-    backgroundColor: '#000',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 10,
-  },
+      marginBottom: 20,
+      color: theme.text,
+    },
 
-  updateButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-});
+    descriptionInput: {
+      height: 120,
+      textAlignVertical: 'top',
+    },
+
+    updateButton: {
+      backgroundColor: theme.btnBackground,
+
+      paddingVertical: 16,
+      borderRadius: 12,
+      alignItems: 'center',
+      marginTop: 10,
+    },
+
+    updateButtonText: {
+      color: theme.btnText,
+      fontSize: 16,
+      fontWeight: '700',
+    },
+  });
