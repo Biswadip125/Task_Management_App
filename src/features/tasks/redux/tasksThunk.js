@@ -6,7 +6,10 @@ import {
   updateTask,
   toggleTaskStatus,
   deleteTask,
+  markTaskForDeletion,
 } from '../../../database/taskRepository';
+import { isInternetAvailable } from '../../../services/network/networkService';
+import { syncPendingTasks } from '../../../services/sync/syncService';
 
 export const fetchTasksThunk = createAsyncThunk(
   'tasks/fetchTasks',
@@ -18,6 +21,13 @@ export const fetchTasksThunk = createAsyncThunk(
 
 export const addTaskThunk = createAsyncThunk('tasks/addTask', async task => {
   const insertId = await insertTask(task);
+
+  const isConnected = await isInternetAvailable();
+
+  if (isConnected) {
+    syncPendingTasks(false);
+  }
+
   return {
     id: insertId,
     title: task.title,
@@ -32,10 +42,16 @@ export const updateTaskThunk = createAsyncThunk(
   async ({ id, title, description }) => {
     await updateTask(id, title, description);
 
+    const isConnected = await isInternetAvailable();
+    if (isConnected) {
+      syncPendingTasks(false);
+    }
+
     return {
       id,
       title,
       description,
+      syncStatus: 'pending',
     };
   },
 );
@@ -44,9 +60,16 @@ export const toggleTaskStatusThunk = createAsyncThunk(
   'tasks/toggleTask',
   async ({ id, completed }) => {
     await toggleTaskStatus(id, completed);
+
+    const isConnected = await isInternetAvailable();
+
+    if (isConnected) {
+      syncPendingTasks(false);
+    }
     return {
       id,
       completed,
+      syncStatus: 'pending',
     };
   },
 );
@@ -54,7 +77,13 @@ export const toggleTaskStatusThunk = createAsyncThunk(
 export const deleteTaskThunk = createAsyncThunk(
   'tasks/deleteTask',
   async id => {
-    await deleteTask(id);
+    await markTaskForDeletion(id);
+
+    const isConnected = await isInternetAvailable();
+
+    if (isConnected) {
+      syncPendingTasks(false);
+    }
     return id;
   },
 );

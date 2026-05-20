@@ -10,16 +10,19 @@ const TaskLists = ({ navigation }) => {
     navigation.navigate('EditTask', { task });
   };
 
-  const renderItem = ({ item }) => (
-    <TaskListCard
-      title={item.title}
-      description={item.description}
-      completed={item.completed}
-      onToggle={() => toggleTask(item.id, true)}
-      onEdit={() => editTask(item)}
-      onDelete={() => deleteTask(item.id)}
-    />
-  );
+  const renderItem = ({ item }) => {
+    if (item.syncStatus === 'pending_delete') return;
+    return (
+      <TaskListCard
+        title={item.title}
+        description={item.description}
+        completed={item.completed}
+        onToggle={() => toggleTask(item.id, true)}
+        onEdit={() => editTask(item)}
+        onDelete={() => deleteTask(item.id)}
+      />
+    );
+  };
 
   return (
     <View style={{ flex: 1 }}>

@@ -6,6 +6,7 @@ import {
   deleteTaskThunk,
   toggleTaskStatusThunk,
   updateTaskThunk,
+  addTaskThunk,
 } from '../redux/tasksThunk';
 import { Alert } from 'react-native';
 

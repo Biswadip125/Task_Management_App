@@ -50,15 +50,15 @@ const taskSlice = createSlice({
         state.tasks.push(action.payload);
       })
       .addCase(updateTaskThunk.fulfilled, (state, action) => {
-        const { id, title, description } = action.payload;
+        const { id, title, description, syncStatus } = action.payload;
         state.tasks = state.tasks.map(task =>
-          task.id === id ? { ...task, title, description } : task,
+          task.id === id ? { ...task, title, description, syncStatus } : task,
         );
       })
       .addCase(toggleTaskStatusThunk.fulfilled, (state, action) => {
-        const { id, completed } = action.payload;
+        const { id, completed, syncStatus } = action.payload;
         state.tasks = state.tasks.map(task =>
-          task.id === id ? { ...task, completed: completed } : task,
+          task.id === id ? { ...task, completed: completed, syncStatus } : task,
         );
       })
       .addCase(deleteTaskThunk.fulfilled, (state, action) => {

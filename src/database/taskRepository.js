@@ -54,10 +54,45 @@ export const toggleTaskStatus = async (id, completed) => {
   }
 };
 
+export const markTaskForDeletion = async id => {
+  try {
+    await db.execute(
+      `UPDATE tasks 
+      SET syncStatus = 'pending_delete'
+      where id = ?`,
+      [id],
+    );
+  } catch (err) {
+    console.log('Mark Task For Deletion Error', err);
+  }
+};
+
 export const deleteTask = async id => {
   try {
     await db.execute(`DELETE FROM tasks WHERE id = ?`, [id]);
   } catch (err) {
     console.log('Delete Task Error', err);
   }
+};
+
+export const getPendingTasks = async () => {
+  const result = await db.execute(
+    `
+    SELECT * FROM tasks
+    WHERE syncStatus = 'pending' OR syncStatus = 'pending_delete'
+    `,
+  );
+
+  return result.rows;
+};
+
+export const markTaskAsSynced = async id => {
+  await db.execute(
+    `
+      UPDATE tasks
+      SET syncStatus = 'synced'
+      WHERE id = ?
+      `,
+    [id],
+  );
 };
