@@ -25,7 +25,6 @@ The application follows a feature-based scalable architecture with proper separa
 
 ## Folder Structure
 
-```txt
 src/
  ├── app/
  │    ├── navigation/
