@@ -129,7 +129,7 @@ is isolated inside services for cleaner components and better reusability.
 
 ## Local Database
 
-* react-native-nitro-sqlite
+* @op-engineering/op-sqlite
 
 ---
 
