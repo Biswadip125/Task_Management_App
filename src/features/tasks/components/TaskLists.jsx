@@ -39,6 +39,12 @@ const TaskLists = ({ navigation }) => {
         keyExtractor={item => String(item.id)}
         renderItem={renderItem}
         contentContainerStyle={{ padding: 16 }}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        removeClippedSubviews={true}
+        updateCellsBatchingPeriod={50}
       />
     </View>
   );
