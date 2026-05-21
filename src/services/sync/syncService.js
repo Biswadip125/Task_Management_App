@@ -8,7 +8,7 @@ import {
 import Toast from 'react-native-toast-message';
 
 export const syncPendingTasks = async showToast => {
-  const userId = auth().currentUser.uid;
+  const userId = auth().currentUser?.uid;
 
   const pendingTasks = await getPendingTasks();
   for (const task of pendingTasks) {
@@ -37,12 +37,11 @@ export const syncPendingTasks = async showToast => {
 
       await markTaskAsSynced(task.id);
     }
-
-    if (showToast) {
-      Toast.show({
-        type: 'success',
-        text1: 'Tasks Sync',
-      });
-    }
+  }
+  if (showToast) {
+    Toast.show({
+      type: 'success',
+      text1: 'Tasks Sync',
+    });
   }
 };

@@ -12,6 +12,8 @@ export const createTables = async () => {
     title TEXT NOT NULL,
     description TEXT,
     completed INTEGER DEFAULT 0,
-    syncStatus TEXT DEFAULT pending
+    syncStatus TEXT DEFAULT pending,
+    reminderTime INTEGER,
+    notificationId TEXT
     )`);
 };

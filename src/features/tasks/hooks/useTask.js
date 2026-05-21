@@ -17,10 +17,6 @@ export default function useTasks() {
 
   const loading = useSelector(state => state.tasks.loading);
 
-  useEffect(() => {
-    dispatch(fetchTasksThunk());
-  }, []);
-
   const deleteTask = id => {
     dispatch(deleteTaskThunk(id));
   };
@@ -34,24 +30,32 @@ export default function useTasks() {
     );
   };
 
-  const updateTask = (id, title, description) => {
+  const updateTask = (id, title, description, reminderTime) => {
     dispatch(
       updateTaskThunk({
         id,
         title,
         description,
+        reminderTime,
       }),
     );
     Alert.alert('Success', 'Task Updated Successfully');
     navigation.goBack();
   };
 
-  const addTask = (title, description) => {
+  const addTask = async (title, description, reminderTime) => {
     if (!title) {
       Alert.alert('Error', 'Please add the task title');
       return;
     }
-    dispatch(addTaskThunk({ title, description, completed: false }));
+    await dispatch(
+      addTaskThunk({
+        title,
+        description,
+        completed: false,
+        reminderTime,
+      }),
+    );
     navigation.navigate('Tasks');
   };
 

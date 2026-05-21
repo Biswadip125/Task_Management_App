@@ -3,8 +3,14 @@ import db from './database';
 export const insertTask = async task => {
   try {
     const result = await db.execute(
-      `INSERT INTO tasks(title, description, completed, syncStatus) VALUES(?, ?, ?, ?)`,
-      [task.title, task.description, task.completed ? 1 : 0, 'pending'],
+      `INSERT INTO tasks(title, description, completed, syncStatus, reminderTime) VALUES(?, ?, ?, ?, ?)`,
+      [
+        task.title,
+        task.description,
+        task.completed ? 1 : 0,
+        'pending',
+        task.reminderTime,
+      ],
     );
 
     return result.insertId;
@@ -24,15 +30,15 @@ export const getTasks = async () => {
   }
 };
 
-export const updateTask = async (id, title, description) => {
+export const updateTask = async (id, title, description, reminderTime) => {
   try {
     await db.execute(
       `
       UPDATE tasks
-      SET title = ?, description = ?, syncStatus = ?
+      SET title = ?, description = ?, syncStatus = ?, reminderTime = ?
       WHERE id = ?
       `,
-      [title, description, 'pending', id],
+      [title, description, 'pending', reminderTime, id],
     );
   } catch (error) {
     console.log('Update Task Error', error);

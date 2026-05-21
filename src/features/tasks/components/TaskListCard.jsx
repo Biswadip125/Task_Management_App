@@ -22,7 +22,7 @@ export default function TaskListCard({
         {/* Checkbox */}
         <TouchableOpacity style={styles.checkboxContainer} onPress={onToggle}>
           <View style={[styles.checkbox, completed && styles.checkboxChecked]}>
-            {completed && <Text style={styles.checkmark}>✓</Text>}
+            {completed && <Text style={styles.checkmark}>{'✓'}</Text>}
           </View>
         </TouchableOpacity>
 

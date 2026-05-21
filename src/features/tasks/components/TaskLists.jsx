@@ -1,14 +1,20 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import TaskListCard from './TaskListCard';
 import useTask from '../hooks/useTask';
+import { useDispatch } from 'react-redux';
+import { fetchTasksThunk } from '../redux/tasksThunk';
 
 const TaskLists = ({ navigation }) => {
   const { tasks, toggleTask, deleteTask } = useTask();
-
+  const dispatch = useDispatch();
   const editTask = async task => {
     navigation.navigate('EditTask', { task });
   };
+
+  useEffect(() => {
+    dispatch(fetchTasksThunk());
+  }, []);
 
   const renderItem = ({ item }) => {
     if (item.syncStatus === 'pending_delete') return;
@@ -16,8 +22,10 @@ const TaskLists = ({ navigation }) => {
       <TaskListCard
         title={item.title}
         description={item.description}
-        completed={item.completed}
-        onToggle={() => toggleTask(item.id, true)}
+        completed={item.completed ? true : false}
+        onToggle={() => {
+          toggleTask(item.id, item?.completed ? false : true);
+        }}
         onEdit={() => editTask(item)}
         onDelete={() => deleteTask(item.id)}
       />
@@ -28,7 +36,7 @@ const TaskLists = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <FlatList
         data={tasks}
-        keyExtractor={item => item.id}
+        keyExtractor={item => String(item.id)}
         renderItem={renderItem}
         contentContainerStyle={{ padding: 16 }}
       />

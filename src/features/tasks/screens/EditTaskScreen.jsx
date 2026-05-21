@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import useTasks from '../hooks/useTask';
 
@@ -22,10 +23,16 @@ export default function EditTaskScreen({ navigation, route }) {
 
   const [description, setDescription] = useState(task?.description);
 
+  const [reminderTime, setReminderTime] = useState(
+    task?.reminderTime ? new Date(Number(task?.reminderTime)) : new Date(),
+  );
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
   const theme = useAppTheme();
 
   const styles = createStyles(theme);
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Edit Task</Text>
@@ -52,9 +59,80 @@ export default function EditTaskScreen({ navigation, route }) {
           placeholderTextColor={theme.secondaryText}
         />
 
+        <Text style={styles.label}>Reminder Date</Text>
+
+        <TouchableOpacity
+          style={styles.reminderButton}
+          onPress={() => setShowDatePicker(true)}
+        >
+          <Text style={styles.reminderText}>
+            {reminderTime.toLocaleDateString()}
+          </Text>
+        </TouchableOpacity>
+
+        <Text style={styles.label}>Reminder Time</Text>
+
+        <TouchableOpacity
+          style={styles.reminderButton}
+          onPress={() => setShowTimePicker(true)}
+        >
+          <Text style={styles.reminderText}>
+            {reminderTime.toLocaleTimeString()}
+          </Text>
+        </TouchableOpacity>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={reminderTime}
+            mode="date"
+            minimumDate={new Date()}
+            display="default"
+            onDismiss={() => setShowDatePicker(false)}
+            onValueChange={(event, selectedDate) => {
+              setShowDatePicker(false);
+
+              if (selectedDate) {
+                const updatedDate = new Date(reminderTime);
+
+                updatedDate.setFullYear(selectedDate.getFullYear());
+
+                updatedDate.setMonth(selectedDate.getMonth());
+
+                updatedDate.setDate(selectedDate.getDate());
+
+                setReminderTime(updatedDate);
+              }
+            }}
+          />
+        )}
+        {showTimePicker && (
+          <DateTimePicker
+            value={reminderTime}
+            mode="time"
+            is24Hour={true}
+            display="default"
+            onDismiss={() => setShowTimePicker(false)}
+            onValueChange={(event, selectedTime) => {
+              setShowTimePicker(false);
+              if (event.type === 'dismissed') return;
+              if (selectedTime) {
+                const updatedTime = new Date(reminderTime);
+
+                updatedTime.setHours(selectedTime.getHours());
+
+                updatedTime.setMinutes(selectedTime.getMinutes());
+
+                setReminderTime(updatedTime);
+              }
+            }}
+          />
+        )}
+
         <TouchableOpacity
           style={styles.updateButton}
-          onPress={() => updateTask(task.id, title, description)}
+          onPress={() =>
+            updateTask(task.id, title, description, reminderTime.getTime())
+          }
         >
           <Text style={styles.updateButtonText}>Update Task</Text>
         </TouchableOpacity>
@@ -112,6 +190,21 @@ const createStyles = theme =>
     descriptionInput: {
       height: 120,
       textAlignVertical: 'top',
+    },
+
+    reminderButton: {
+      borderWidth: 1,
+      borderColor: theme.border,
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+      marginBottom: 20,
+      backgroundColor: theme.background,
+    },
+
+    reminderText: {
+      color: theme.text,
+      fontSize: 16,
     },
 
     updateButton: {
