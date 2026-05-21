@@ -6,12 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 
 import { useAppTheme } from '../../../theme/useAppTheme';
+import Toast from 'react-native-toast-message';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -24,7 +24,10 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Please Provide Email and Password');
+      Toast.show({
+        type: 'error',
+        text1: "'Please Provide Email and Password'",
+      });
 
       return;
     }
@@ -32,8 +35,23 @@ export default function LoginScreen({ navigation }) {
     try {
       await auth().signInWithEmailAndPassword(email, password);
 
-      Alert.alert('Success', 'Login Successful');
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful',
+      });
     } catch (err) {
+      if (err.code === 'auth/invalid-email') {
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Email',
+        });
+      }
+      if (err.code === 'auth/invalid-credential') {
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Creadentials',
+        });
+      }
       console.log('Error Login', err.message);
     }
   };

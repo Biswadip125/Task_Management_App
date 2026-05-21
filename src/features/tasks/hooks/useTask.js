@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import {
-  fetchTasksThunk,
   deleteTaskThunk,
   toggleTaskStatusThunk,
   updateTaskThunk,
   addTaskThunk,
 } from '../redux/tasksThunk';
-import { Alert } from 'react-native';
+
+import Toast from 'react-native-toast-message';
 
 export default function useTasks() {
   const dispatch = useDispatch();
@@ -39,13 +39,20 @@ export default function useTasks() {
         reminderTime,
       }),
     );
-    Alert.alert('Success', 'Task Updated Successfully');
+    Toast.show({
+      type: 'success',
+      text1: 'Task Updated Successfully',
+    });
+
     navigation.goBack();
   };
 
   const addTask = async (title, description, reminderTime) => {
     if (!title) {
-      Alert.alert('Error', 'Please add the task title');
+      Toast.show({
+        type: 'error',
+        text1: 'Please add the task title',
+      });
       return;
     }
     await dispatch(

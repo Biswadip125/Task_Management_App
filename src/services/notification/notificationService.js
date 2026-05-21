@@ -42,12 +42,6 @@ export const scheduleNotification = async task => {
       },
       trigger,
     );
-
-    console.log('notification created');
-
-    const notifications = await notifee.getTriggerNotifications();
-
-    console.log(notifications);
   } catch (err) {
     console.log('NOTIFICATION ERROR', err);
   }

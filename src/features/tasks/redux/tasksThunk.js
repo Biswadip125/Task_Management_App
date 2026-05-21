@@ -25,7 +25,6 @@ export const fetchTasksThunk = createAsyncThunk(
 
 export const addTaskThunk = createAsyncThunk('tasks/addTask', async task => {
   const insertId = await insertTask(task);
-  console.log(task);
   await scheduleNotification({ ...task, id: insertId });
 
   const isConnected = await isInternetAvailable();

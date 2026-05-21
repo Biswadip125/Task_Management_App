@@ -13,6 +13,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import useTasks from '../hooks/useTask';
 
 import { useAppTheme } from '../../../theme/useAppTheme';
+import Toast from 'react-native-toast-message';
 
 export default function EditTaskScreen({ navigation, route }) {
   const { task } = route.params;
@@ -130,9 +131,25 @@ export default function EditTaskScreen({ navigation, route }) {
 
         <TouchableOpacity
           style={styles.updateButton}
-          onPress={() =>
-            updateTask(task.id, title, description, reminderTime.getTime())
-          }
+          onPress={() => {
+            if (!title) {
+              Toast.show({
+                type: 'error',
+                text1: 'Please Add task title',
+              });
+              return;
+            }
+            if (reminderTime.getTime() <= Date.now()) {
+              Toast.show({
+                type: 'error',
+                text1: 'Invalid Reminder',
+                text2: 'Please select a future date and time',
+              });
+
+              return;
+            }
+            updateTask(task.id, title, description, reminderTime.getTime());
+          }}
         >
           <Text style={styles.updateButtonText}>Update Task</Text>
         </TouchableOpacity>

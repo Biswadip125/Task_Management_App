@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +13,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import useTasks from '../hooks/useTask';
 
 import { useAppTheme } from '../../../theme/useAppTheme';
+import Toast from 'react-native-toast-message';
 
 export default function AddTaskScreen({ navigation }) {
   const [title, setTitle] = useState('');
@@ -127,11 +127,19 @@ export default function AddTaskScreen({ navigation }) {
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
+            if (!title) {
+              Toast.show({
+                type: 'error',
+                text1: 'Please Add task title',
+              });
+            }
             if (reminderTime.getTime() <= Date.now()) {
-              Alert.alert(
-                'Invalid Reminder',
-                'Please select a future date and time',
-              );
+              Toast.show({
+                type: 'error',
+                text1: 'Invalid Reminder',
+                text2: 'Please select a future date and time',
+              });
+
               return;
             }
             addTask(title, description, reminderTime.getTime());
